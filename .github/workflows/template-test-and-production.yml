@@ -1,28 +1,32 @@
 name: OAG CI & CD Workflows - Test & Production Environment
 
 on:
-  workflow_call
-
-env:
-  pulledProduction: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true }}
-  pushedProduction: ${{ github.ref == 'refs/heads/main' }}
-  pushedTest: ${{ github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/feature/')  || startsWith(github.ref, 'refs/heads/bugfix/') }}
+  workflow_call 
 
 jobs:
   prepare:
     name: Prepare
     runs-on: ubuntu-latest
+    outputs:
+      deployTest: ${{ steps.setup.outputs.DEPLOY_TEST }}
+      deployProduction: ${{ steps.setup.outputs.DEPLOY_PRODUCTION }}
     steps:
-      - name: Download Artifact form Build
+      - id: setup
+        name: Download Artifact form Build
         run: |
-          echo github.event.event_name: ${{ github.event.event_name }}
-          echo github.event.action: ${{ github.event.action }}
-          echo github.event.pull_request.head.ref: ${{ github.event.pull_request.head.ref }}
-          echo github.event.pull_request.merged: ${{ github.event.pull_request.merged }}
-          echo env.pulledProduction: ${{ env.pulledProduction }}
-          echo env.pushedProduction: ${{ env.pushedProduction }}
-          echo env.pushedTest: ${{ env.pulledProduction }}
-          echo github.ref: ${{ github.ref }}
+          echo "DEPLOY_TEST=${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/feature/') || startsWith(github.ref, 'refs/heads/bugfix/') }}" >> "$GITHUB_OUTPUT"
+          echo "DEPLOY_PRODUCTION=${{ (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true) || github.ref == 'refs/heads/main' }}" >> "$GITHUB_OUTPUT"
+
+  # Test Environment
+
+  build-test:
+    name: "[Test] Build"
+    runs-on: windows-latest
+    needs: prepare
+    if: ${{ needs.prepare.outputs.deployTest }}
+    steps:
+      - name: Do something
+        run: echo 'Build Test'
 
   deploy-test:
     name: "[Test] Deploy"
@@ -32,25 +36,20 @@ jobs:
     steps:
       - name: Do something
         run: echo 'Deploy Test'
-
-  build-test:
-    name: "[Test] Build"
-    runs-on: windows-latest
-    needs: prepare
-    steps:
-      - name: Do something
-        run: echo 'Build Test'
+  
+  # Production Environment
 
   build-production:
-    name: "[Test] Build"
+    name: "[Production] Build"
     runs-on: windows-latest
     needs: prepare
+    if: ${{ needs.prepare.outputs.deployProduction }}
     steps:
       - name: Do something
         run: echo 'Build Production'
 
   deploy-production:
-    name: "[Test] Deploy"
+    name: "[Production] Deploy"
     needs: build-production
     runs-on: ubuntu-latest
     environment: Production
