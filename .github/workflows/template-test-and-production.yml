@@ -29,12 +29,23 @@ jobs:
     outputs:
       deployTest: ${{ steps.setup.outputs.DEPLOY_TEST }}
       deployProduction: ${{ steps.setup.outputs.DEPLOY_PRODUCTION }}
+      version: ${{ steps.package.outputs.VERSION }}
     steps:
-      - id: setup
-        name: Evaluate Deployment Strategy
+      - name: Evaluate Deployment Strategy
+        id: setup  
         run: |
           echo "DEPLOY_TEST=${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/feature/') || startsWith(github.ref, 'refs/heads/bugfix/') }}" >> "$GITHUB_OUTPUT"
           echo "DEPLOY_PRODUCTION=${{ (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true) || github.ref == 'refs/heads/main' }}" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Extract Version from package.json
+        id: package
+        shell: pwsh
+        run: |
+          $version = (Get-Content ./package.json) -join "`n" | ConvertFrom-Json | Select -ExpandProperty "version"
+          echo "VERSION=$version" >> "$GITHUB_OUTPUT"
 
       - name: Summary
         run: |
@@ -45,7 +56,10 @@ jobs:
           else
             echo "Deployment: bis in Production möglich" >> $GITHUB_STEP_SUMMARY
           fi
-          echo "Version: " >> $GITHUB_STEP_SUMMARY
+          echo "Version: ${{ steps.package.outputs.VERSION }} " >> $GITHUB_STEP_SUMMARY
+          echo "Run Id: ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "Run Number: ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "Run Attempt: ${{ github.run_attempt }}" >> $GITHUB_STEP_SUMMARY
 
   # Test Environment
 
