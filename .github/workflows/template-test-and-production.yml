@@ -56,9 +56,7 @@ jobs:
 
   deploy-production:
     name: "Production / Deploy"
-    needs: 
-      - build-production
-      - deploy-test
+    needs: build-production
     runs-on: ubuntu-latest
     environment: Production
     steps:
