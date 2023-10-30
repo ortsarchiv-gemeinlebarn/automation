@@ -12,10 +12,16 @@ jobs:
       deployProduction: ${{ steps.setup.outputs.DEPLOY_PRODUCTION }}
     steps:
       - id: setup
-        name: Download Artifact form Build
+        name: Evaluate Deployment Strategy
         run: |
           echo "DEPLOY_TEST=${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/feature/') || startsWith(github.ref, 'refs/heads/bugfix/') }}" >> "$GITHUB_OUTPUT"
           echo "DEPLOY_PRODUCTION=${{ (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true) || github.ref == 'refs/heads/main' }}" >> "$GITHUB_OUTPUT"
+
+      - name: Result
+        run: |
+          echo DEPLOY_TEST: ${{ steps.setup.outputs.DEPLOY_TEST }}
+          echo DEPLOY_PRODUCTION: ${{ steps.setup.outputs.DEPLOY_PRODUCTION }}
+  
 
   # Test Environment
 
@@ -23,7 +29,7 @@ jobs:
     name: "[Test] Build"
     runs-on: windows-latest
     needs: prepare
-    if: ${{ needs.prepare.outputs.deployTest }}
+    if: ${{ needs.prepare.outputs.deployTest == 'true' }}
     steps:
       - name: Do something
         run: echo 'Build Test'
@@ -43,7 +49,7 @@ jobs:
     name: "[Production] Build"
     runs-on: windows-latest
     needs: prepare
-    if: ${{ needs.prepare.outputs.deployProduction }}
+    if: ${{ needs.prepare.outputs.deployProduction == 'true' }}
     steps:
       - name: Do something
         run: echo 'Build Production'
