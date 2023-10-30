@@ -15,6 +15,6 @@ on:
   
 jobs:
   test2:
-    uses: ortsarchiv-gemeinlebarn/automation/templates/standard.yml@develop
+    uses: ortsarchiv-gemeinlebarn/automation/.github/workflows/templates/standard.yml@develop
     with:
       production-only: true
