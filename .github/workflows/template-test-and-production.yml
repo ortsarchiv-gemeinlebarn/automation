@@ -22,6 +22,7 @@ jobs:
           echo env.pulledProduction: ${{ env.pulledProduction }}
           echo env.pushedProduction: ${{ env.pushedProduction }}
           echo env.pushedTest: ${{ env.pulledProduction }}
+          echo github.ref: ${{ github.ref }}
 
   deploy-test:
     name: "[Test] Deploy"
@@ -36,7 +37,6 @@ jobs:
     name: "[Test] Build"
     runs-on: windows-latest
     needs: prepare
-    if: ${{ ! inputs.production-only }}
     steps:
       - name: Do something
         run: echo 'Build Test'

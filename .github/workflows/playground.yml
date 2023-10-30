@@ -14,5 +14,6 @@ on:
       - main
   
 jobs:
-  all:
+  build-and-deploy:
+    name: Build & Deploy
     uses: ortsarchiv-gemeinlebarn/automation/.github/workflows/template-test-and-production.yml@develop
