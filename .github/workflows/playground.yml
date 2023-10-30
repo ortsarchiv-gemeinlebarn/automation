@@ -15,5 +15,5 @@ on:
   
 jobs:
   build-and-deploy:
-    name: 👨🏻‍💻
+    name: Build & Deploy
     uses: ortsarchiv-gemeinlebarn/automation/.github/workflows/template-test-and-production.yml@develop
