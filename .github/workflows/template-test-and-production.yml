@@ -45,6 +45,7 @@ jobs:
         shell: pwsh
         run: |
           $version = (Get-Content ./package.json) -join "`n" | ConvertFrom-Json | Select -ExpandProperty "version"
+          Write-Host $version
           echo "VERSION=$version" >> "$GITHUB_OUTPUT"
 
       - name: Summary
