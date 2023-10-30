@@ -17,11 +17,14 @@ jobs:
           echo "DEPLOY_TEST=${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/feature/') || startsWith(github.ref, 'refs/heads/bugfix/') }}" >> "$GITHUB_OUTPUT"
           echo "DEPLOY_PRODUCTION=${{ (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true) || github.ref == 'refs/heads/main' }}" >> "$GITHUB_OUTPUT"
 
-      - name: Result
-        run: |
-          echo DEPLOY_TEST: ${{ steps.setup.outputs.DEPLOY_TEST }}
-          echo DEPLOY_PRODUCTION: ${{ steps.setup.outputs.DEPLOY_PRODUCTION }}
-  
+      - name: Test
+        if: ${{ steps.setup.outputs.DEPLOY_TEST == 'true' }}
+        run: echo "::notice Dploying in Test Envrionment"
+
+      - name: Production
+        if: ${{ steps.setup.outputs.DEPLOY_TEST == 'true' }}
+        run: echo "::notice Dploying in Production Envrionment"
+          
 
   # Test Environment
 
