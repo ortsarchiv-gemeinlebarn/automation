@@ -37,12 +37,11 @@ jobs:
           echo "DEPLOY_PRODUCTION=${{ (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true) || github.ref == 'refs/heads/main' }}" >> "$GITHUB_OUTPUT"
 
       - name: Summary
-        shell: pwsh
         run: |
-          Write-Host "### Result" >> $GITHUB_STEP_SUMMARY
-          Write-Host "" >> $GITHUB_STEP_SUMMARY # this is a blank line
-          Write-Host "**Test:** ${{ steps.setup.outputs.DEPLOY_TEST }}" >> $GITHUB_STEP_SUMMARY
-          Write-Host "**Production:** ${{ steps.setup.outputs.DEPLOY_PRODUCTION }}" >> $GITHUB_STEP_SUMMARY
+          echo "### Result" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "**Test:** ${{ steps.setup.outputs.DEPLOY_TEST }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Production:** ${{ steps.setup.outputs.DEPLOY_PRODUCTION }}" >> $GITHUB_STEP_SUMMARY
           
 
   # Test Environment
