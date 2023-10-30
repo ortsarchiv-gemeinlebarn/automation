@@ -26,7 +26,7 @@ jobs:
   # Test Environment
 
   build-test:
-    name: "[Test] Build"
+    name: "Test / Build"
     runs-on: windows-latest
     needs: prepare
     if: ${{ needs.prepare.outputs.deployTest == 'true' }}
@@ -35,7 +35,7 @@ jobs:
         run: echo 'Build Test'
 
   deploy-test:
-    name: "[Test] Deploy"
+    name: "Test / Deploy"
     needs: build-test
     runs-on: ubuntu-latest
     environment: Test
@@ -46,7 +46,7 @@ jobs:
   # Production Environment
 
   build-production:
-    name: "[Production] Build"
+    name: "Production / Build"
     runs-on: windows-latest
     needs: prepare
     if: ${{ needs.prepare.outputs.deployProduction == 'true' }}
@@ -55,8 +55,10 @@ jobs:
         run: echo 'Build Production'
 
   deploy-production:
-    name: "[Production] Deploy"
-    needs: build-production
+    name: "Production / Deploy"
+    needs: 
+      - build-production
+      - deploy-test
     runs-on: ubuntu-latest
     environment: Production
     steps:
