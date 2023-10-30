@@ -19,11 +19,11 @@ jobs:
 
       - name: Test
         if: ${{ steps.setup.outputs.DEPLOY_TEST == 'true' }}
-        run: echo "::notice Dploying in Test Envrionment"
+        run: echo "::notic::Deploying in Test Envrionment"
 
       - name: Production
         if: ${{ steps.setup.outputs.DEPLOY_TEST == 'true' }}
-        run: echo "::notice Dploying in Production Envrionment"
+        run: echo "::notice::Deploying in Production Envrionment"
           
 
   # Test Environment
