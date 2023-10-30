@@ -38,11 +38,13 @@ jobs:
 
       - name: Summary
         run: |
-          echo "### Result" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
-          echo "**Test:** ${{ steps.setup.outputs.DEPLOY_TEST }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Production:** ${{ steps.setup.outputs.DEPLOY_PRODUCTION }}" >> $GITHUB_STEP_SUMMARY
-          
+          echo "# Informationen zum Workflow Run" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ ${{ steps.setup.outputs.DEPLOY_PRODUCTION }} == 'false' ]; then
+              echo "Deployment: nur bis Test" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "Deployment: bis in Production möglich" >> $GITHUB_STEP_SUMMARY
+          echo "Version: " >> $GITHUB_STEP_SUMMARY
 
   # Test Environment
 
