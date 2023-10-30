@@ -2,25 +2,25 @@ name: OAG CI & CD Workflows - Test & Production Environment
 
 on:
   workflow_call:
-    secrets:
-      FTP_DEPLOY_HOSTNAME_TEST:
-        required: true
-        description: FTP Hostname for Deployment in Test
-      FTP_DEPLOY_USERNAME_TEST:
-        required: true
-        description: FTP Username for Deployment in Test
-      FTP_DEPLOY_PASSWORD_TEST:
-        required: true
-        description: FTP Password for Deployment in Test
-      FTP_DEPLOY_HOSTNAME_PRODUCTION:
-        required: true
-        description: FTP Hostname for Deployment in Production
-      FTP_DEPLOY_USERNAME_PRODUCTION:
-        required: true
-        description: FTP Username for Deployment in Production
-      FTP_DEPLOY_PASSWORD_PRODUCTION:
-        required: true
-        description: FTP Password for Deployment in Production
+    # secrets:
+    #   FTP_DEPLOY_HOSTNAME_TEST:
+    #     required: true
+    #     description: FTP Hostname for Deployment in Test
+    #   FTP_DEPLOY_USERNAME_TEST:
+    #     required: true
+    #     description: FTP Username for Deployment in Test
+    #   FTP_DEPLOY_PASSWORD_TEST:
+    #     required: true
+    #     description: FTP Password for Deployment in Test
+    #   FTP_DEPLOY_HOSTNAME_PRODUCTION:
+    #     required: true
+    #     description: FTP Hostname for Deployment in Production
+    #   FTP_DEPLOY_USERNAME_PRODUCTION:
+    #     required: true
+    #     description: FTP Username for Deployment in Production
+    #   FTP_DEPLOY_PASSWORD_PRODUCTION:
+    #     required: true
+    #     description: FTP Password for Deployment in Production
 
 jobs:
   prepare:
