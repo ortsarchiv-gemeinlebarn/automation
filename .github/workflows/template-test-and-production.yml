@@ -39,13 +39,10 @@ jobs:
       - name: Summary
         shell: pwsh
         run: |
-          $test = ${{ steps.setup.outputs.DEPLOY_TEST }} -eq 'true' ? 'Ja' : 'Nein';
-          $production = ${{ steps.setup.outputs.DEPLOY_PRODUCTION }} -eq 'true' ? 'Ja' : 'Nein';
-
           Write-Host "### Result" >> $GITHUB_STEP_SUMMARY
           Write-Host "" >> $GITHUB_STEP_SUMMARY # this is a blank line
-          Write-Host "**Test:** $test" >> $GITHUB_STEP_SUMMARY
-          Write-Host "**Production:** $production" >> $GITHUB_STEP_SUMMARY
+          Write-Host "**Test:** ${{ steps.setup.outputs.DEPLOY_TEST }}" >> $GITHUB_STEP_SUMMARY
+          Write-Host "**Production:** ${{ steps.setup.outputs.DEPLOY_PRODUCTION }}" >> $GITHUB_STEP_SUMMARY
           
 
   # Test Environment
