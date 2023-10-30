@@ -1,0 +1,20 @@
+name: Playground
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+      - feature/**
+      - bugfix/**
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+  
+jobs:
+  test2:
+    uses: ortsarchiv-gemeinlebarn/automation/templates/standard.yml@develop
+    with:
+      production-only: true

@@ -1,0 +1,66 @@
+name: OAG CI & CD Workflows - Standard
+
+on:
+  workflow_call:
+    inputs:
+      production-only:
+        required: false
+        type: boolean
+        default: false
+        description: If only a singular 'Prodction'-Environment exists
+
+env:
+  pulledProduction: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true }}
+  pushedProduction: ${{ github.ref == 'refs/heads/main' }}
+  pushedTest: ${{ github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/heads/feature/')  || startsWith(github.ref, 'refs/heads/bugfix/') }}
+
+jobs:
+  prepare:
+    name: Prepate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifact form Build
+        run: |
+          echo github.event.event_name: ${{ github.event.event_name }}
+          echo github.event.action: ${{ github.event.action }}
+          echo github.event.pull_request.head.ref: ${{ github.event.pull_request.head.ref }}
+          echo github.event.pull_request.merged: ${{ github.event.pull_request.merged }}
+          echo env.pulledProduction: ${{ env.pulledProduction }}
+          echo env.pushedProduction: ${{ env.pushedProduction }}
+          echo env.pushedTest: ${{ env.pulledProduction }}
+
+  build-test:
+    name: "[Test] Build"
+    runs-on: windows-latest
+    needs: prepare
+    if: ${{ ! inputs.production-only }}
+    steps:
+      - name: Do something
+        run: echo 'Build Test'
+
+  deploy-test:
+    name: "[Test] Deploy"
+    needs: build-test
+    runs-on: ubuntu-latest
+    environment: Test
+    steps:
+      - name: Do something
+        run: echo 'Deploy Test'
+
+  build-production:
+    name: "[Test] Build"
+    runs-on: windows-latest
+    needs: prepare
+    if: ${{ env.pulledProduction || env.pushedProduction }}
+    steps:
+      - name: Do something
+        run: echo 'Build Production'
+
+  deploy-production:
+    name: "[Test] Deploy"
+    needs: build-production
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - name: Do something
+        run: echo 'Deploy Production'
