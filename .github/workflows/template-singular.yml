@@ -1,4 +1,4 @@
-name: OAG CI & CD Workflows - Standard
+name: OAG CI & CD Workflows - Singular Environment
 
 on:
   workflow_call:
@@ -29,6 +29,37 @@ jobs:
           echo env.pushedProduction: ${{ env.pushedProduction }}
           echo env.pushedTest: ${{ env.pulledProduction }}
 
+# Singular
+
+  build:
+    name: "Build"
+    runs-on: windows-latest
+    needs: prepare
+    if: ${{ inputs.production-only }}
+    steps:
+      - name: Do something
+        run: echo 'Build Test'
+
+  deploy:
+    name: "Build"
+    runs-on: windows-latest
+    needs: prepare
+    if: ${{ inputs.production-only }}
+    steps:
+      - name: Do something
+        run: echo 'Build Test'
+
+# Singular
+
+  deploy-test:
+    name: "[Test] Deploy"
+    needs: build-test
+    runs-on: ubuntu-latest
+    environment: Test
+    steps:
+      - name: Do something
+        run: echo 'Deploy Test'
+
   build-test:
     name: "[Test] Build"
     runs-on: windows-latest
@@ -51,7 +82,7 @@ jobs:
     name: "[Test] Build"
     runs-on: windows-latest
     needs: prepare
-    if: ${{ env.pulledProduction || env.pushedProduction }}
+    if: ${{ env.pulledProduction || env.pulledProduction }}
     steps:
       - name: Do something
         run: echo 'Build Production'
